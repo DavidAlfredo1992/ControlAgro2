@@ -1,0 +1,59 @@
+from distutils.core import setup
+import ConfigParser
+import os
+
+class SetupConfiguration:
+
+    def __init__(self):
+
+        self.setupInstall()
+        self.ExistDirectory()#evaluate if exists directory
+        print "creando carpeta"
+        os.system("mkdir ControlCalidad")#create directory
+        os.system("cd ControlCalidad")#go to new directory
+        self.GenerateConfigFile()#generate config file
+        os.system("mv configControlCalidad.cfg ControlCalidad")#mv file configuration to directory created
+        os.system("mv ControlCalidad/ /etc")#move directory to etc directory
+        print "Insertando elementos de configuracion en base de datos"
+        self.Load = None
+        #self.InsertElementInTableConfiguration("/home/david/Desktop/Tesis/tesis/Data", "test_csv.txt.csv", "Data_Test.csv")
+
+    def setupInstall(self):
+    
+        setup(name='ControlDeCalidad',
+            version='alpha',
+            description='Controllers for web system of quality control in countryside',
+            author='david medina',
+            author_email='dmedina11@alumnos.utalca.cl',
+            license='Licencia',
+            packages=['Modules', 'Modules.CCConnectDB', 'Modules.CCCRUD', 'Modules.CCStatistics', 'Modules.CCUsers', 'Modules.CCampos', 'Modules.CCPlanillas', 'Modules.CCCuadrillas'],)
+
+
+    def GenerateConfigFile(self):
+        Config = ConfigParser.ConfigParser()#instance of ConfigParser
+
+        #create the section and her values
+        Config.add_section('ConectionDataBase')
+        Config.set('ConectionDataBase', 'user', 'root')
+        Config.set('ConectionDataBase', 'pass', '123ewq')
+        Config.set('ConectionDataBase', 'host', 'localhost')
+        Config.set('ConectionDataBase', 'data_base', 'dbControlCalidadCampo')
+
+              #write file configuration
+        with open('configControlCalidad.cfg', 'wb') as configfile:
+            Config.write(configfile)
+
+    def ExistDirectory(self):
+
+        print "revisando"
+        exist=0#param to evaluate...
+        if os.path.exists("/etc/ControlCalidad"):
+            os.system("rm -R /etc/ControlCalidad")
+
+def main():
+
+    setup = SetupConfiguration()
+    return 0
+
+if __name__ == '__main__':
+    main()
