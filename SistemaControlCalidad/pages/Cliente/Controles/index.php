@@ -102,7 +102,10 @@
 
                         </li> 
                         <li>
-                            <a href="../Estadisticas/index.php"><i class="fa fa-bar-chart-o fa-fw fa fa-4x"></i>   Mis Estadísticas</a>
+                            <?php
+							
+								echo "<a href=\"../Estadisticas/index.php?idCampo=".$idCampo."\"><i class=\"fa fa-bar-chart-o fa-fw fa fa-4x\"></i>   Mis Estadísticas</a>";
+							?>
 						</li>
                         <li>
                             <?php

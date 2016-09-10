@@ -8,7 +8,7 @@
 	$command = "python ../../../../ControlDeCalidad/Modules/CCPlanillas/handlerControlCalidad.py 6 ".$idPlanilla." ".$idControlCalidad;
 	$informacion = array();
 	echo $command;
-	#exec($command, $informacion);
+	exec($command, $informacion);
 	$resumenPlanilla = explode(";", $informacion[0]);
 
 	// Redirecciono al usuario a la página principal del sitio.

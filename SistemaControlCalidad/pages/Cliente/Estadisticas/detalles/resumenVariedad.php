@@ -1,11 +1,9 @@
 <?php
 	 
 	$idCampo = $_GET['idCampo'];
-	$command = "python ../../../../ControlDeCalidad/Modules/CCStatistics/statisticsCliente.py 10 ".$idCampo;
-	$output = array();
-	#echo $command;
-	exec($command, $output);
-	$numberUser = count($output);
+	$information = $_GET['info'];
+	$dataInfo = explode(",", $information);
+	$numberInfo = count($dataInfo);
 ?>
 
 
@@ -23,28 +21,22 @@
     <title>Sistema de Control de Calidad</title>
 
     <!-- Bootstrap Core CSS -->
-    <link href="../../../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- DataTables CSS -->
-    <link href="../../../bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.css" rel="stylesheet">
-
-    <!-- DataTables Responsive CSS -->
-    <link href="../../../bower_components/datatables-responsive/css/dataTables.responsive.css" rel="stylesheet">
+    <link href="../../../../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- MetisMenu CSS -->
-    <link href="../../../bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
+    <link href="../../../../bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
 
     <!-- Timeline CSS -->
-    <link href="../../../dist/css/timeline.css" rel="stylesheet">
+    <link href="../../../../dist/css/timeline.css" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link href="../../../dist/css/sb-admin-2.css" rel="stylesheet">
+    <link href="../../../../dist/css/sb-admin-2.css" rel="stylesheet">
 
     <!-- Morris Charts CSS -->
-    <link href="../../../bower_components/morrisjs/morris.css" rel="stylesheet">
+    <link href="../../../../bower_components/morrisjs/morris.css" rel="stylesheet">
 
     <!-- Custom Fonts -->
-    <link href="../../../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="../../../../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -90,12 +82,12 @@
                         </li>
                         <li>
                             <?php
-								echo "<a href=\"index.php?idCampo=".$idCampo."\"><i class=\"fa  fa-leaf  fa-fw fa fa-4x\"></i>   Mi Campo</a>";
+								echo "<a href=\"../index.php?idCampo=".$idCampo."\"><i class=\"fa  fa-leaf  fa-fw fa fa-4x\"></i>   Mi Campo</a>";
 							?>
                          </li>
                          <li>
-                            <?php
-								echo "<a href=\"defectos.php?idCampo=".$idCampo."\"><i class=\"fa  fa-times-circle  fa-fw fa fa-4x\"></i>   Mis Defectos</a>";
+                         <?php
+								echo "<a href=\"../defectos.php?idCampo=".$idCampo."\"><i class=\"fa  fa-times-circle  fa-fw fa fa-4x\"></i>   Mis Defectos</a>";
 							?>
 
                         </li> 
@@ -112,11 +104,11 @@
 
                            
                         </li>
-                       
                        <li>
                             <?php
 								echo "<a href=\"../Controles/index.php?idCampo=".$idCampo."\"><i class=\"fa fa-check-circle fa-fw fa fa-4x\"></i>Mis Controles</a>";
 							?>
+
                            
                         </li>
                         <li>
@@ -133,10 +125,10 @@
             <!-- /.navbar-static-side -->
         </nav>
 
-        <div id="page-wrapper">
+      <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">Mis Defectos</h1>
+                    <h1 class="page-header">Defectos evaluados en controles de calidad</h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
@@ -145,7 +137,7 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            Listado de Defectos existentes
+                            Listado de defectos y sus apariciones en controles de calidad (promedio)
                            
                         </div>
                         
@@ -156,20 +148,20 @@
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Nombre Defecto</th>                                            
+                                            <th>Nombre Defecto</th>
+                                            <th>Cantidad</th>                                            
                                         </tr>
 									</thead>
 									<tbody>
 										
                                         <?php
-											for ($i=1; $i<=$numberUser; $i++){
+											for ($i=1; $i<=$numberInfo; $i++){
 												
 												echo $varClass1;
-												$columnas = explode(";", $output[$i-1]);
+												$columnas = explode(";", $dataInfo[$i-1]);
 												echo "<td>".$i."</td>";
 												echo "<td>".$columnas[0]."</td>";
-												
-												
+												echo "<td>".$columnas[1]."</td>";			
 												echo "</tr>";
 											}
                                         ?>
@@ -190,24 +182,22 @@
 
     </div>
     <!-- /#wrapper -->
-
-
-   <!-- jQuery -->
-    <script src="../../../bower_components/jquery/dist/jquery.min.js"></script>
+	<!-- jQuery -->
+    <script src="../../../../bower_components/jquery/dist/jquery.min.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
-    <script src="../../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../../../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 
     <!-- Metis Menu Plugin JavaScript -->
-    <script src="../../../bower_components/metisMenu/dist/metisMenu.min.js"></script>
+    <script src="../../../../bower_components/metisMenu/dist/metisMenu.min.js"></script>
 
     <!-- DataTables JavaScript -->
-    <script src="../../../bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
-    <script src="../../../bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
-    <script src="../../../bower_components/datatables-responsive/js/dataTables.responsive.js"></script>
+    <script src="../../../../bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
+    <script src="../../../../bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+    <script src="../../../../bower_components/datatables-responsive/js/dataTables.responsive.js"></script>
     
     <!-- Custom Theme JavaScript -->
-    <script src="../../../dist/js/sb-admin-2.js"></script>
+    <script src="../../../../dist/js/sb-admin-2.js"></script>
 
     <!-- Page-Level Demo Scripts - Tables - Use for reference -->
     <script>
@@ -220,5 +210,3 @@
 </body>
 
 </html>
-
-

@@ -1,40 +1,7 @@
 <?php
-
-session_start();
-#obtener numero de campos
-$command = "python ../../../../ControlDeCalidad/Modules/CCStatistics/statisticsIndex.py 1";
-$output = array();
-exec($command, $output);#ejecucion del comando
-$campos = $output[0];
-
-#obtener numero de variedades
-$command = "python ../../../../ControlDeCalidad/Modules/CCStatistics/statisticsIndex.py 2";
-$output = array();
-exec($command, $output);#ejecucion del comando
-$variedades = $output[0];
-
-#obtener numero de alertas
-$command = "python ../../../../ControlDeCalidad/Modules/CCStatistics/statisticsIndex.py 3";
-$output = array();
-exec($command, $output);#ejecucion del comando
-$alertas = $output[0];
-
-#obtener numero de alertas
-$command = "python ../../../../ControlDeCalidad/Modules/CCStatistics/statisticsIndex.py 4";
-$output = array();
-exec($command, $output);#ejecucion del comando
-$controles = $output[0];
-
-#obtener información del sistema de notificaciones
-$command = "python ../../../ControlDeCalidad/Modules/CCStatistics/statisticsIndex.py 5";
-$output = array();
-exec($command, $output);#ejecucion del comando
-$notificaciones = count($output);
-
-$varClass1 = "<i class=\"fa fa-comment fa-fw\"></i>";
-$varClass2 = "<span class=\"pull-right text-muted small\">";
-$var4 = "#";
-$varClass3 = "<a href=\"".$var4."\""."class=\"list-group-item\">";
+	
+	$idCampo = $_GET['idCampo'];
+	
 ?>
 
 <!DOCTYPE html>
@@ -111,27 +78,44 @@ $varClass3 = "<a href=\"".$var4."\""."class=\"list-group-item\">";
                             </div>
                             <!-- /input-group -->
                         </li>
-                        <li>
-                            <a href="#"><i class="fa fa-leaf fa-fw fa fa-5x"></i>       Mi Campo</a>
-                        </li>
-                        <li>
-                            <a href="Campo/defectos.php"><i class="fa  fa-times-circle  fa-fw fa fa-5x"></i>   Mis Defectos</a>
+                       <li>
+                            <?php
+								echo "<a href=\"../Campo/index.php?idCampo=".$idCampo."\"><i class=\"fa  fa-leaf  fa-fw fa fa-4x\"></i>   Mi Campo</a>";
+							?>
+                         </li>
+                         <li>
+                            <?php
+								echo "<a href=\"../Campo/defectos.php?idCampo=".$idCampo."\"><i class=\"fa  fa-times-circle  fa-fw fa fa-4x\"></i>   Mis Defectos</a>";
+							?>
 
-                        </li>
+                        </li> 
                         <li>
-                            <a href="#"><i class="fa fa-bar-chart-o fa-fw fa fa-5x"></i>   Mis Estadísticas</a>
+                            <?php
+							
+								echo "<a href=\"index.php?idCampo=".$idCampo."\"><i class=\"fa fa-bar-chart-o fa-fw fa fa-4x\"></i>   Mis Estadísticas</a>";
+							?>
 						</li>
                         <li>
-                            <a href="#"><i class="fa fa-warning  fa-fw fa fa-5x"></i>Mis Alertas</a>
+                            <?php
+								echo "<a href=\"../Alertas/index.php?idCampo=".$idCampo."\"><i class=\"fa fa-warning  fa-fw fa fa-4x\"></i>Mis Alertas</a>";
+							?>
 
                            
                         </li>
-						<li>
-                            <a href="../index.php"><i class="fa fa-fw fa-fw fa-5x fa-home fa-fw"></i>Menú Principal</a>
+                       
+                       <li>
+                            <?php
+								echo "<a href=\"../Controles/index.php?idCampo=".$idCampo."\"><i class=\"fa fa-check-circle fa-fw fa fa-4x\"></i>Mis Controles</a>";
+							?>
+
+                           
+                        </li>
+                        <li>
+                            <a href="../index.php"><i class="fa fa-fw fa-fw fa-4x fa-home fa-fw"></i>Menú Principal</a>
                             
                         </li>
                         <li>
-                            <a href="../../LoginSystem/login.html"><i class="fa fa-user fa-fw fa fa-5x"></i>Cerrar Sesión</a>
+                            <a href="../../LoginSystem/login.html"><i class="fa fa-user fa-fw fa fa-4x"></i>Cerrar Sesión</a>
                         </li>
                     </ul>
                 </div>
@@ -141,15 +125,12 @@ $varClass3 = "<a href=\"".$var4."\""."class=\"list-group-item\">";
         </nav>
 
         <div id="page-wrapper">
-            <div class="row">
+           <div class="row">
                 <div class="col-lg-12">
-                    <?php
-						echo "<h1 class=\"page-header\">Bienvenido ".$_SESSION['email']."</h1>";
-                    ?>
+                    <h1 class="page-header">Mis Estadísticas</h1>
                 </div>
                 <!-- /.col-lg-12 -->
-            </div>
-            <!-- /.row -->
+            </div> 
             <!-- /.row -->
             <div class="row">
                 <div class="col-lg-3 col-md-6">
@@ -157,47 +138,21 @@ $varClass3 = "<a href=\"".$var4."\""."class=\"list-group-item\">";
                         <div class="panel-heading">
                             <div class="row">
                                 <div class="col-xs-3">
-                                    <i class="fa fa-comments fa-5x"></i>
+                                    <i class="fa fa-th-large fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
                                     <div class="huge">
-										<?php
-											echo $campos;
-										?>
+										
                                     </div>
-                                    <div>Campos Inscritos</div>
+                                    
                                 </div>
                             </div>
                         </div>
-                        <a href="#">
+                         <?php
+							echo "<a href=\"detalles/huertos.php?idCampo=".$idCampo."\">";
+						?>
                             <div class="panel-footer">
-                                <span class="pull-left">Defectos existentes en el Campo</span>
-                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                <div class="clearfix"></div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="panel panel-green">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <div class="col-xs-3">
-                                    <i class="fa fa-tasks fa-5x"></i>
-                                </div>
-                                <div class="col-xs-9 text-right">
-                                    <div class="huge">
-										<?php
-											echo $variedades;
-										?>
-                                    </div>
-                                    <div>Variedades Existentes</div>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="#">
-                            <div class="panel-footer">
-                                <span class="pull-left">Variedades existentes en el campo</span>
+                                <span class="pull-left">Ver estadísticas por huerto</span>
                                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                                 <div class="clearfix"></div>
                             </div>
@@ -209,21 +164,21 @@ $varClass3 = "<a href=\"".$var4."\""."class=\"list-group-item\">";
                         <div class="panel-heading">
                             <div class="row">
                                 <div class="col-xs-3">
-                                    <i class="fa fa-support fa-5x"></i>
+                                    <i class="fa fa-th-list fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
                                     <div class="huge">
-										<?php
-											echo $controles;
-										?>
+									
                                     </div>
-                                    <div>Controles Efectuados</div>
+                                    
                                 </div>
                             </div>
                         </div>
-                        <a href="#">
+                         <?php
+							echo "<a href=\"detalles/sectores.php?idCampo=".$idCampo."\">";
+						?>
                             <div class="panel-footer">
-                                <span class="pull-left">Cantidad de controles efectuados al campo</span>
+                                <span class="pull-left">Ver estadísticas por Sector</span>
                                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                                 <div class="clearfix"></div>
                             </div>
@@ -235,21 +190,47 @@ $varClass3 = "<a href=\"".$var4."\""."class=\"list-group-item\">";
                         <div class="panel-heading">
                             <div class="row">
                                 <div class="col-xs-3">
-                                    <i class="fa fa-shopping-cart fa-5x"></i>
+                                    <i class="fa fa-th fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
                                     <div class="huge">
-										<?php
-											echo $alertas;
-										?>
+										
                                     </div>
-                                    <div>Alertas Enviadas</div>
+                                    
                                 </div>
                             </div>
                         </div>
-                        <a href="#">
+                         <?php
+							echo "<a href=\"detalles/cuarteles.php?idCampo=".$idCampo."\">";
+						?>
                             <div class="panel-footer">
-                                <span class="pull-left">Cantidad de Alertas generadas al campo</span>
+                                <span class="pull-left">Ver estadísticas por cuarteles</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-green">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-tree  fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">
+										
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <?php
+							echo "<a href=\"detalles/variedades.php?idCampo=".$idCampo."\">";
+						?>
+                            <div class="panel-footer">
+                                <span class="pull-left">Ver estadísticas por variedad</span>
                                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                                 <div class="clearfix"></div>
                             </div>
@@ -257,9 +238,9 @@ $varClass3 = "<a href=\"".$var4."\""."class=\"list-group-item\">";
                     </div>
                 </div>
                 
-            </div>
+            </div>                   
+        </div>
         <!-- /#page-wrapper -->
-
     </div>
     <!-- /#wrapper -->
 

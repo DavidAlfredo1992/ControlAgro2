@@ -3,6 +3,7 @@ from Modules.CCConnectDB import ConnectDataBase
 from Modules.CCCRUD import CrudDataBase
 
 import sys
+import numpy as np
 
 class Statistics (object):
 	
@@ -215,7 +216,110 @@ class Statistics (object):
 					print element[i], ";",
 		
 		self.Connect.closeConnectionDB()
+	
+	#obtener todos los controles de calidad efectuados en un campo en particular asociados a una variedad segun tamano de muestra
+	def getControlesVariedadByMuestra(self, idCampo, variedad):
+		
+		#obtener el nombre del campo....
+		nombreCampo = str(self.getNameCampo(idCampo))
+		
+		query = "select controlCalidadEfectuado.controlCalidad from controlCalidadEfectuado join digitador on (controlCalidadEfectuado.digitador = digitador.iddigitador) join planillaDeControlDeCalidad on (planillaDeControlDeCalidad.controlCalidad = controlCalidadEfectuado.controlCalidad) join planilla on (planilla.idplanilla = planillaDeControlDeCalidad.idplanilla) where planilla.campo = '%s' AND planilla.variedad = '%s'" % (nombreCampo, variedad)
+		self.Connect.initConnectionDB()
+		List = self.CrudDataBase.queryBasicDataBase(query, self.Connect)
+		
+		ListaControles = []#lista con el id de los controles efectuados...
+		for element in List:
+			ListaControles.append(element[0])
+		
+		self.Connect.closeConnectionDB()
+		return ListaControles
+	
+	#obtener listado de defectos evaluados alguna vez en una variedad de un campo en particular (independiente del cuartel) y en controles de calidad
+	def getListadoDefectosEvaluadosByVariedad(self, idCampo, variedad):
+		
+		#obtener el nombre del campo....
+		nombreCampo = str(self.getNameCampo(idCampo))
+		self.Connect.initConnectionDB()
+		query = "select Distinct defectosEvaluados.nombreDefecto from defectosEvaluados join controlCalidadEfectuado on (defectosEvaluados.controlCalidadPertenece = controlCalidadEfectuado.controlCalidad) join digitador on (controlCalidadEfectuado.digitador = digitador.iddigitador) join planillaDeControlDeCalidad on (planillaDeControlDeCalidad.controlCalidad = controlCalidadEfectuado.controlCalidad) join planilla on (planilla.idplanilla = planillaDeControlDeCalidad.idplanilla) where planilla.campo = '%s' AND planilla.variedad = '%s'" % (nombreCampo, variedad)
+		#print query
+		List = self.CrudDataBase.queryBasicDataBase(query, self.Connect)
+		
+		ListaDefectosEvaluados = {}#lista con el defecto evaluado en alguna ocasion...
+		for element in List:
+			ListaDefectosEvaluados.update({str(element[0]):[]})#todos apuntaran a una lista vacia...
+		
+		self.Connect.closeConnectionDB()
+		return ListaDefectosEvaluados
+		
+	#obtener defecto-cantidad segun control de calidad efectuado...
+	def getDefectoCantidadByControl(self, idControl):
+		
+		query = "select defectosEvaluados.nombreDefecto, defectosEvaluados.valorDefecto from controlCalidadEfectuado join defectosEvaluados on (controlCalidadEfectuado.controlCalidad = defectosEvaluados.controlCalidadPertenece) where controlCalidadEfectuado.controlCalidad = %d" % int (idControl)
+		
+		self.Connect.initConnectionDB()
+		List = self.CrudDataBase.queryBasicDataBase(query, self.Connect)
+		
+		ListaDefectos = {}#lista con el defecto y la cantidad, key = nombreDefecto => value = cantidad
+		for element in List:
+			ListaDefectos.update({str(element[0]):int(element[1])})
+		
+		self.Connect.closeConnectionDB()
+		return ListaDefectos
+	
+	#estimar los porcentajes...
+	def getPorcentajesByVariedad(self, idCampo, variedad):
+		
+		variedad = variedad.replace("-", " ")
+		ListaDefectosEvaluados = self.getListadoDefectosEvaluadosByVariedad(idCampo, variedad)#lista de defectos evaluados por variedad
+		#print ListaDefectosEvaluados
+		ListaControles = self.getControlesVariedadByMuestra(idCampo, variedad)#lista de controles efectuados...
+		#print ListaControles
+		for element in ListaControles:
+			ListaDefectosControl = self.getDefectoCantidadByControl(element)
+			
+			#de esta lista obtenemos la key y le almacenamos la cantidad en la lista de defectos evaluados...
+			for defecto in ListaDefectosControl:
+				ListaDefectosEvaluados[defecto].append(ListaDefectosControl[defecto])
+		#print ListaDefectosEvaluados
+		
+		ListaDefectosProm = {}#almacena los promedios de los defectos...
+		for key in ListaDefectosEvaluados:
+			
+			prom = self.getAverageDefecto(ListaDefectosEvaluados[key])
+			ListaDefectosProm.update({key: prom})
+		
+		line = ""
+		line2 = ""
+		for key in ListaDefectosProm:
+			
+			line2 = line2+key+";"+str(ListaDefectosProm[key])+","
+			line = line + "{ name: '%s', y : %f}," % (key, float(ListaDefectosProm[key]))
+		
+		line = line [:-1]
+		print line
+		line2 = line2[:-1]
+		print line2
+		
+	
+	#sacar promedio por defecto => esto es lo que se grafica...
+	def getAverageDefecto(self, listaValues):
+		
+		prom = np.mean(listaValues)
+		prom = round(prom, 3)
+		return prom
+	
+	#scar cantidad de controles por tamano de muestra
+	def numberControlesByMuestra(self, idCampo, variedad, muestra): 
+	
+		nombreCampo = str(self.getNameCampo(idCampo))
+		self.Connect.initConnectionDB()
+		query = "select controlCalidadEfectuado.controlCalidad, controlCalidadEfectuado.tamanoMuestra from controlCalidadEfectuado join digitador on (controlCalidadEfectuado.digitador = digitador.iddigitador) join planillaDeControlDeCalidad on (planillaDeControlDeCalidad.controlCalidad = controlCalidadEfectuado.controlCalidad) join planilla on (planilla.idplanilla = planillaDeControlDeCalidad.idplanilla) where planilla.campo = '%s' AND planilla.variedad = '%s' AND controlCalidadEfectuado.tamanoMuestra =%d" % (nombreCampo, variedad, int(muestra))
+		#print query
+		List = self.CrudDataBase.queryBasicDataBase(query, self.Connect)
 
+		print len(List)
+		self.Connect.closeConnectionDB()
+		
 def main ():
 	
 	st = Statistics()
@@ -252,6 +356,15 @@ def main ():
 
 	elif sys.argv[1] == "12":#listado de controles
 		st.getInfoControles(sys.argv[2])
+	
+	#estadisticas por variedad...
+	elif sys.argv[1] == "13":#obtener porcentajes de variedad de controles efetuados 
+		st.getPorcentajesByVariedad(sys.argv[2], sys.argv[3])
+	
+	#cantidad de controles por tamano muestra...
+	elif sys.argv[1] == "14":
+		st.numberControlesByMuestra(sys.argv[2], sys.argv[3], sys.argv[4])
+		
 	return 0
 
 if __name__ == '__main__':
