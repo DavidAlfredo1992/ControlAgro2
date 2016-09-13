@@ -155,7 +155,8 @@
                                             <th>#</th>
                                             <th>Nombre Cuartel</th>
                                             <th>Nombre Sector</th>
-                                            <th>Nombre Huerto</th>                                            
+                                            <th>Nombre Huerto</th> 
+                                            <th>Det.</th>                                           
                                         </tr>
 									</thead>
 									<tbody>
@@ -169,7 +170,7 @@
 												echo "<td>".$columnas[0]."</td>";
 												echo "<td>".$columnas[1]."</td>";
 												echo "<td>".$columnas[2]."</td>";
-												
+												echo "<td><a href=\"estadisticasCuarteles.php?idCampo=".$idCampo."&cuartel=".$columnas[0]."&sector=".$columnas[1]."&huerto=".$columnas[2]."\" class=\"btn btn-succes btn-circle\"><i class=\"fa fa-fw fa-th-list fa-2x\"></i></a>"."</td>";
 												echo "</tr>";
 											}
                                         ?>

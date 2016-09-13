@@ -156,6 +156,7 @@
                                         <tr>
                                             <th>#</th>
                                             <th>Nombre Huerto</th>                                            
+                                            <th>Det.</th>
                                         </tr>
 									</thead>
 									<tbody>
@@ -167,8 +168,7 @@
 												$columnas = explode(";", $output[$i-1]);
 												echo "<td>".$i."</td>";
 												echo "<td>".$columnas[0]."</td>";
-												
-												
+												echo "<td><a href=\"estadisticasHuerto.php?idCampo=".$idCampo."&huerto=".$columnas[0]."\" class=\"btn btn-succes btn-circle\"><i class=\"fa fa-fw fa-th-list fa-2x\"></i></a>"."</td>";										
 												echo "</tr>";
 											}
                                         ?>
